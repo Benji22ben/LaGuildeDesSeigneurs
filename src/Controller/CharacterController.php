@@ -37,10 +37,10 @@ class CharacterController extends AbstractController
     #[Route('/character', name: 'character_redirect_index',  methods:['GET','HEAD'])]
     public function redirectIndex(): Response
     {
-        return $this->redirectToRoute('character_index');
+        return $this->redirectToRoute('characterIndex');
     }
 
-    #[Route('/character/index', name: 'character_index',  methods:['GET','HEAD'])]
+    #[Route('/character/index', name: 'characterIndex',  methods:['GET','HEAD'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('characterIndex', null);

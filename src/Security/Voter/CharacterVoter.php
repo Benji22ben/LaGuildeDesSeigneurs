@@ -27,12 +27,13 @@ class CharacterVoter extends Voter
         }
 
         return in_array($attribute, self::ATTRIBUTES)
-            && $subject instanceof \App\Entity\Character;
+            && $subject instanceof Character;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         //Define access rigts
+        dd($subject);
         switch($attribute){
             case self::CHARACTER_DISPLAY:
             case self::CHARACTER_INDEX:
