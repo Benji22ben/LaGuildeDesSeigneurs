@@ -124,6 +124,6 @@ class Character
     }
     public function toArray()
     {
-        return $this;
+        return "lol";
     }
 }
