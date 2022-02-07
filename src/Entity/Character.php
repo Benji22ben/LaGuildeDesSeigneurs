@@ -6,6 +6,7 @@ use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
+#[ORM\Table(name: "characters")]
 class Character
 {
     #[ORM\Id]
@@ -14,22 +15,22 @@ class Character
     private $id = 1;
 
     #[ORM\Column(type: 'string', length: 16)]
-    private $name = 'Maeglin';
+    private $name;
 
     #[ORM\Column(type: 'string', length: 64)]
-    private $surname = 'Oeil vif';
+    private $surname;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    private $caste = "Archer";
+    private $caste;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    private $knowledge = "Nombres";
+    private $knowledge;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $intelligence = "100";
+    private $intelligence;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $life = "14";
+    private $life;
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     private $image;
@@ -128,15 +129,6 @@ class Character
 
         return $this;
     }
-    public function toArray()
-    {
-        $everything = array(
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'caste' => $this->caste
-        );
-        return $everything;
-    }
 
     public function getKind(): ?string
     {
@@ -160,5 +152,10 @@ class Character
         $this->creation = $creation;
 
         return $this;
+    }
+
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
