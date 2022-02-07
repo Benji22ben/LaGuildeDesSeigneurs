@@ -14,22 +14,22 @@ class Character
     private $id = 1;
 
     #[ORM\Column(type: 'string', length: 16)]
-    private $name;
+    private $name = 'Maeglin';
 
     #[ORM\Column(type: 'string', length: 64)]
-    private $surname;
+    private $surname = 'Oeil vif';
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    private $caste;
+    private $caste = "Archer";
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    private $knowledge;
+    private $knowledge = "Nombres";
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $intelligence;
+    private $intelligence = "100";
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $life;
+    private $life = "14";
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     private $image;
@@ -124,6 +124,11 @@ class Character
     }
     public function toArray()
     {
-        return "lol";
+        $everything = array(
+            'name' => $this->name,
+            'surname' => $this->surname,
+            'caste' => $this->caste
+        );
+        return $everything;
     }
 }
