@@ -19,8 +19,8 @@ class CharacterController extends AbstractController
         ]);
     }
 
-    #[Route('/character/display', name: 'character_display')]
-    public function display()
+    #[Route('/character/display', name: 'display')]
+    public function display(): Response
     {
         $character = New Character();
         // dump($character);
