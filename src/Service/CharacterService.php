@@ -28,8 +28,9 @@ class CharacterService implements CharacterServiceInterface
             ->setLife('12')
             ->setImage('/images/eldalote.jpg')
             ->setCreation(new \DateTime())
+            ->setIdentifier(hash('sha1', uniqid()))
             ;
-            
+
             $this->em->persist($character);
             $this->em->flush();
 
