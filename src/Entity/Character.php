@@ -34,6 +34,12 @@ class Character
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     private $image;
 
+    #[ORM\Column(type: 'string', length: 16)]
+    private $kind;
+
+    #[ORM\Column(type: 'datetime')]
+    private $creation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -130,5 +136,29 @@ class Character
             'caste' => $this->caste
         );
         return $everything;
+    }
+
+    public function getKind(): ?string
+    {
+        return $this->kind;
+    }
+
+    public function setKind(string $kind): self
+    {
+        $this->kind = $kind;
+
+        return $this;
+    }
+
+    public function getCreation(): ?\DateTimeInterface
+    {
+        return $this->creation;
+    }
+
+    public function setCreation(\DateTimeInterface $creation): self
+    {
+        $this->creation = $creation;
+
+        return $this;
     }
 }
