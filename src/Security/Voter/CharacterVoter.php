@@ -11,9 +11,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class CharacterVoter extends Voter
 {
     public const CHARACTER_DISPLAY = 'characterDisplay';
+    public const CHARACTER_CREATE = 'characterCreate';
+    public const CHARACTER_INDEX = 'characterIndex';
 
     private const ATTRIBUTES = array(
+        self::CHARACTER_CREATE,
         self::CHARACTER_DISPLAY,
+        self::CHARACTER_INDEX,
     );
 
     protected function supports(string $attribute, $subject): bool
@@ -31,15 +35,14 @@ class CharacterVoter extends Voter
         //Define access rigts
         switch($attribute){
             case self::CHARACTER_DISPLAY:
+            case self::CHARACTER_INDEX:
                 //Peut envoyer $token et $subject pour tester des conditions
                 return $this->canDisplay();
                 break;
+            case self::CHARACTER_CREATE:
+                return $this->canCreate();
+                break;
         }
-        // $user = $token->getUser();
-        // // if the user is anonymous, do not grant access
-        // if (!$user instanceof UserInterface) {
-        //     return false;
-        // }
         throw new LogicException('Invalid attribute: ' . $attribute);
     }
     
@@ -47,6 +50,11 @@ class CharacterVoter extends Voter
      * Check if is allowed to display
      */
     private function canDisplay()
+    {
+        return true;
+    }
+    
+    private function canCreate()
     {
         return true;
     }
