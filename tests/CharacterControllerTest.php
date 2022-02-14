@@ -25,6 +25,16 @@ class CharacterControllerTest extends WebTestCase
         $this->assertJsonResponse($this->client->getResponse());
     }
 
+    /**
+    * Tests modify
+    */
+    public function testModify()
+    {
+        $this->client->request('PUT', '/character/modify/XXX');
+        
+        $this->assertJsonResponse($this->client->getResponse());
+    }
+
     public function assertJsonResponse($response)
     {
         $response = $this->client->getResponse();
