@@ -36,7 +36,7 @@ class CharacterVoter extends Voter
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         //Define access rigts
-        dd($subject);
+        // dd($subject);
         switch($attribute){
             case self::CHARACTER_DISPLAY:
             case self::CHARACTER_INDEX:
