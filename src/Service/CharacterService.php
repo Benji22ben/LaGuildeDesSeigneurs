@@ -41,9 +41,19 @@ class CharacterService implements CharacterServiceInterface
         return $character;
     }
 
-    /*** 
-     * {@inheritdoc}
-     * */
+    /**
+    * {@inheritdoc}
+    */
+    public function delete(Character $character) {
+        $this->em->remove($character);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+    * {@inheritdoc}
+    * */
     public function modify(Character $character)
     {
         $character
@@ -59,7 +69,8 @@ class CharacterService implements CharacterServiceInterface
         $this->em->persist($character);
         $this->em->flush();
 
-        return $character;}
+        return $character;
+    }
 
 
     /**

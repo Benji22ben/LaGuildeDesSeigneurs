@@ -2,27 +2,60 @@
 
 namespace App\Tests;
 
+use PhpParser\Node\Expr\Cast\String_;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CharacterControllerTest extends WebTestCase
 {
+    private $content;
+    
+    private $client;
+
+    private static $identifier;
+    
     public function setUp(): void
     {
         $this->client = static::createClient();
     }
 
+    /**
+    * Create
+    */
+    public function testCreate()
+    {
+        $this->client->request('POST', '/character/create');
+
+        $this->assertJsonResponse();
+
+        $this->defineIdentifier();
+        $this->assertIdentifier();
+    }
+
     public function testindex()
     {
-        $this->client->request('GET', '/character');
+        $this->client->request('GET', '/character/index');
 
-        $this->assertJsonResponse($this->client->getResponse());
+        $this->assertJsonResponse();
+    }
+
+    /*** Asserts that 'identifier' is present in the Response*/
+    public function assertIdentifier()
+    {
+        $this->assertArrayHasKey('identifier', $this->content);
+    }
+
+    /*** Defines identifier*/
+    public function defineIdentifier()
+    {
+        self::$identifier = $this->content['identifier'];
     }
 
     public function testDisplay()
     {
-        $this->client->request('GET', '/character/display/32cdbd3d7e47d102000c5ee9ca9812e18f52da7e');
+        $this->client->request('GET', '/character/display/'  . self::$identifier);
 
         $this->assertJsonResponse($this->client->getResponse());
+        $this->assertIdentifier();
     }
 
     /**
@@ -30,15 +63,20 @@ class CharacterControllerTest extends WebTestCase
     */
     public function testModify()
     {
-        $this->client->request('PUT', '/character/modify/XXX');
+        $this->client->request('PUT', '/character/modify/' . self::$identifier);
         
         $this->assertJsonResponse($this->client->getResponse());
+        $this->assertIdentifier();
     }
 
-    public function assertJsonResponse($response)
+    public function assertJsonResponse()
     {
         $response = $this->client->getResponse();
+
+        $this->content = json_decode($response->getContent(), true, 50);
+
         $this->assertResponseIsSuccessful();
+        
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
     }
 
@@ -53,6 +91,16 @@ class CharacterControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/character/display/badIdentifier');
         $this->assertError404($this->client->getResponse()->getStatusCode());
+    }
+    
+    /**
+    * Tests Delete
+    */
+    public function testDelete()
+    {
+        $this->client->request('DELETE', '/character/delete/'  . self::$identifier);
+        
+        $this->assertJsonResponse($this->client->getResponse());
     }
 
     /**
