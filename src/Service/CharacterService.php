@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use DateTime;
 use App\Entity\Character;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CharacterRepository;
+use DateTime;
 
 class CharacterService implements CharacterServiceInterface
 {
@@ -33,6 +33,7 @@ class CharacterService implements CharacterServiceInterface
             ->setImage('/images/eldalote.jpg')
             ->setCreation(new \DateTime())
             ->setIdentifier(hash('sha1', uniqid()))
+            ->setModification(new \DateTime())
         ;
 
         $this->em->persist($character);
@@ -64,6 +65,7 @@ class CharacterService implements CharacterServiceInterface
             ->setKnowledge('Diplomatie')
             ->setIntelligence(110)
             ->setLife(13)->setImage('/images/gorthol.jpg')
+            ->setModification(new DateTime())
         ;
             
         $this->em->persist($character);
