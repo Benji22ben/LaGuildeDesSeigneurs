@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use DateTime;
+use App\Entity\Character;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -23,6 +25,7 @@ class AppFixtures extends Fixture
                 ->setImage('/images/eldalote.jpg')
                 ->setIdentifier(hash('sha1', uniqid()))
                 ->setCreation(new DateTime())
+                ->setModification(new DateTime())
             ;
             $manager->persist($character);
         }

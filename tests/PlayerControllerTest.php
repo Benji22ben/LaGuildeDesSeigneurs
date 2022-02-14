@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CharacterControllerTest extends WebTestCase
+class PlayerControllerTest extends WebTestCase
 {
-
     private $content;
     private static $identifier;
     private $client;
@@ -21,7 +20,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testCreate()
     {
-        $this->client->request('POST', '/character/create');
+        $this->client->request('POST', '/player/create');
         $this->assertJsonResponse();
         $this->defineIdentifier();
         $this->assertIdentifier();
@@ -32,7 +31,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testRedirectIndex()
     {
-        $this->client->request('GET', '/character');
+        $this->client->request('GET', '/player');
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
@@ -41,7 +40,7 @@ class CharacterControllerTest extends WebTestCase
      */
     // public function testIndex()
     // {
-    //     $this->client->request('GET', '/character/index');
+    //     $this->client->request('GET', '/player/index');
     //     $this->assertJsonResponse();
     // }
 
@@ -50,7 +49,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testDisplay()
     {
-        $this->client->request('GET', '/character/display/'. self::$identifier);
+        $this->client->request('GET', '/player/display/'. self::$identifier);
 
         $this->assertJsonResponse($this->client->getResponse());
     }
@@ -61,7 +60,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testInexistingIdentifier()
     {
-        $this->client->request('GET', '/character/display/bbc451fc6e23c6a53180581d422cbf7975086c49error');
+        $this->client->request('GET', '/player/display/bbc451fc6e23c6a53180581d422cbf7975086c49error');
 
         $this->assertError404($this->client->getResponse()->getStatusCode());
     }
@@ -71,7 +70,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testModify()
     {
-        $this->client->request('PUT', '/character/modify/' . self::$identifier);
+        $this->client->request('PUT', '/player/modify/' . self::$identifier);
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
@@ -81,7 +80,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testDelete()
     {
-        $this->client->request('DELETE', '/character/delete/' . self::$identifier);
+        $this->client->request('DELETE', '/player/delete/' . self::$identifier);
         $this->assertJsonResponse();
     }
 

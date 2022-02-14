@@ -17,6 +17,7 @@ class CharacterService implements CharacterServiceInterface
         $this->characterRepository = $characterRepository;
         $this->em = $em;
     }
+
     /**
      * {@inheritdoc}
      */
