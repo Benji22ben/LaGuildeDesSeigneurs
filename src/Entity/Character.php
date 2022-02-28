@@ -20,7 +20,7 @@ class Character
         min: 3,
         max: 16,
     )]
-    #[ORM\Column(type: 'string', length: 16)]
+    #[ORM\Column(type: 'string', length: 16, name:"gls_name")]
     private $name;
 
     #[Assert\NotBlank]
