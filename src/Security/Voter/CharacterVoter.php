@@ -31,8 +31,7 @@ class CharacterVoter extends Voter
             return $subject instanceof Character && in_array($attribute, self::ATTRIBUTES);
         }
 
-        return in_array($attribute, self::ATTRIBUTES)
-            && $subject instanceof Character;
+        return in_array($attribute, self::ATTRIBUTES);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool

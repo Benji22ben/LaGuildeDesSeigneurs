@@ -15,12 +15,17 @@ class PlayerControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-        /**
+    /**
      * Tests create
      */
     public function testCreate()
     {
-        $this->client->request('POST', '/player/create');
+        $this->client->request('POST','/player/create',
+        array(),//parameters
+        array(),//files
+        array('CONTENT_TYPE' => 'application/json'),//server
+        '{"firstname" : "Benjamin", "lastname" : "MARQUES", "email" : "benji22ben@gmail.com", "mirian" : "0"}'
+        );
         $this->assertJsonResponse();
         $this->defineIdentifier();
         $this->assertIdentifier();
@@ -38,11 +43,11 @@ class PlayerControllerTest extends WebTestCase
     /**
      * Tests index
      */
-    // public function testIndex()
-    // {
-    //     $this->client->request('GET', '/player/index');
-    //     $this->assertJsonResponse();
-    // }
+    public function testIndex()
+    {
+        $this->client->request('GET', '/player/index');
+        $this->assertJsonResponse();
+    }
 
     /**
      * Tests display
@@ -70,9 +75,29 @@ class PlayerControllerTest extends WebTestCase
      */
     public function testModify()
     {
-        $this->client->request('PUT', '/player/modify/' . self::$identifier);
+        //Tests with partial data array
+        $this->client->request(
+            'PUT',
+            '/player/modify/' . self::$identifier,
+            array(),//parameters
+            array(),//files
+            array('CONTENT_TYPE' => 'application/json'),//server
+            '{"firstname" : "Ben", "email" : "benbeny@gmail.com", "mirian" : "125"}'
+        );
         $this->assertJsonResponse();
         $this->assertIdentifier();
+            
+        //Tests with whole content
+        $this->client->request(
+            'PUT',
+            '/player/modify/' . self::$identifier,
+            array(),//parameters
+            array(),//files
+            array('CONTENT_TYPE' => 'application/json'),//server
+            '{"firstname" : "Trecy", "lastname" : "LAUWERS", "email" : "lauwers.trecy@gmail.com", "mirian" : "25"}'
+        );
+            $this->assertJsonResponse();
+            $this->assertIdentifier();
     }
 
     /**

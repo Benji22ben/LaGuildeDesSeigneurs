@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\PlayerServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class PlayerController extends AbstractController
 {
@@ -17,9 +18,9 @@ class PlayerController extends AbstractController
     }
 
     #[Route('/player/create', name: 'playerCreate',  methods:['POST','HEAD'])]
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $player = $this->playerService->create();
+        $player = $this->playerService->create($request->getContent());
         return new JsonResponse($player->toArray());
     }
 
@@ -37,10 +38,10 @@ class PlayerController extends AbstractController
     #[Route('/player', name: 'player_redirect_index',  methods:['GET','HEAD'])]
     public function redirectIndex(): Response
     {
-        return $this->redirectToRoute('playerIndex');
+        return $this->redirectToRoute('player_index');
     }
 
-    #[Route('/player/index', name: 'playerIndex',  methods:['GET','HEAD'])]
+    #[Route('/player/index', name: 'player_index',  methods:['GET','HEAD'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('playerIndex', null);
@@ -49,10 +50,10 @@ class PlayerController extends AbstractController
     }
 
     #[Route('/player/modify/{identifier}', name: 'playerModify', requirements:["identifier" => "^([a-z0-9]{40})$"],  methods:['PUT','HEAD'])]
-    public function modify(player $player){
+    public function modify(Request $request, Player $player){
         
         $this->denyAccessUnlessGranted('playerModify', $player);
-        $player = $this->playerService->modify($player);
+        $player = $this->playerService->modify($player, $request->getContent());
         
         return new JsonResponse($player->toArray());
     }

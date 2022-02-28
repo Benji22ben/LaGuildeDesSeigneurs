@@ -31,8 +31,7 @@ class PlayerVoter extends Voter
             return $subject instanceof Player && in_array($attribute, self::ATTRIBUTES);
         }
 
-        return in_array($attribute, self::ATTRIBUTES)
-            && $subject instanceof Player;
+        return in_array($attribute, self::ATTRIBUTES);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
