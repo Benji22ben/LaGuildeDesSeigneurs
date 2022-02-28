@@ -27,7 +27,7 @@ class PlayerVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(null !== $subject){
+        if (null !== $subject) {
             return $subject instanceof Player && in_array($attribute, self::ATTRIBUTES);
         }
 
@@ -38,7 +38,7 @@ class PlayerVoter extends Voter
     {
         //Define access rigts
         // dd($subject);
-        switch($attribute){
+        switch ($attribute) {
             case self::PLAYER_DISPLAY:
             case self::PLAYER_INDEX:
                 //Peut envoyer $token et $subject pour tester des conditions
@@ -56,7 +56,7 @@ class PlayerVoter extends Voter
         }
         throw new LogicException('Invalid attribute: ' . $attribute);
     }
-    
+
     /**
      * Check if is allowed to display
      */
@@ -64,13 +64,13 @@ class PlayerVoter extends Voter
     {
         return true;
     }
-    
+
     private function canCreate()
     {
         return true;
     }
-    
-    // Check if is allowed to delete 
+
+    // Check if is allowed to delete
     private function canDelete()
     {
         return true;

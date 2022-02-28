@@ -26,4 +26,9 @@ interface PlayerServiceInterface
      * Gets all the player
      */
     public function getAll();
+
+    /***
+    * Serialize the object(s)
+    */
+    public function serializeJson($data);
 }

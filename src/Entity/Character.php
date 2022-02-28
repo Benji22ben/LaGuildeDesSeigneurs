@@ -6,7 +6,6 @@ use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
 #[ORM\Table(name: "characters")]
 class Character
@@ -23,7 +22,7 @@ class Character
     )]
     #[ORM\Column(type: 'string', length: 16)]
     private $name;
-    
+
     #[Assert\NotBlank]
     #[Assert\Length(
         min: 3,
@@ -38,7 +37,7 @@ class Character
     )]
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
     private $caste;
-    
+
     #[Assert\Length(
         min: 3,
         max: 16,
@@ -80,6 +79,9 @@ class Character
 
     #[ORM\Column(type: 'datetime')]
     private $modification;
+
+    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: 'characters')]
+    private $player;
 
     public function getId(): ?int
     {
@@ -194,10 +196,10 @@ class Character
         return $this;
     }
 
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
+    // public function toArray()
+    // {
+    //     return get_object_vars($this);
+    // }
 
     public function getIdentifier(): ?string
     {
@@ -219,6 +221,18 @@ class Character
     public function setModification(\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?Player $player): self
+    {
+        $this->player = $player;
 
         return $this;
     }

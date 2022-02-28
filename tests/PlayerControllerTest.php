@@ -56,7 +56,7 @@ class PlayerControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/player/display/'. self::$identifier);
 
-        $this->assertJsonResponse($this->client->getResponse());
+        $this->assertJsonResponse();
     }
 
 
@@ -67,7 +67,7 @@ class PlayerControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/player/display/bbc451fc6e23c6a53180581d422cbf7975086c49error');
 
-        $this->assertError404($this->client->getResponse()->getStatusCode());
+        $this->assertError404();
     }
 
     /**

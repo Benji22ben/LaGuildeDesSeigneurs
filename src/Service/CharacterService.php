@@ -12,28 +12,35 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use App\Form\CharacterType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class CharacterService implements CharacterServiceInterface
 {
-
     public function __construct(
         CharacterRepository $characterRepository,
-        EntityManagerInterface $em, 
+        EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
         ValidatorInterface $validator,
-        )
-    {
+    ) {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->validator = $validator;
     }
+    private $characterRepository;
+    private $formFactory;
+    private $em;
+    private $validator;
 
     /**
      * {@inheritdoc}
      */
-    public function create(string $data) {
-
+    public function create(string $data)
+    {
         $character = new Character();
         $character
             ->setIdentifier(hash('sha1', uniqid()))
@@ -49,21 +56,40 @@ class CharacterService implements CharacterServiceInterface
         return $character;
     }
 
+    /***
+    * {@inheritdoc}
+    */
+    public function serializeJson($data)
+    {
+        $encoders = new JsonEncoder();
+
+        $defaultContext = [
+                AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
+                    return $data->getIdentifier();
+                },
+            ];
+        // $normalizers = new ObjectNormalizer();
+        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
+
+        return $serializer->serialize($data, 'json');
+    }
+
+
     /**
      * {@inheritdoc}
      */
     public function isEntityFilled(Character $character)
     {
         $errors = $this->validator->validate($character);
-        if (count($errors) > 0) 
-        {
-            throw new UnprocessableEntityHttpException((string) $errors . ' Missing data for Entity -> ' . json_encode($character->toArray()));
+        if (count($errors) > 0) {
+            throw new UnprocessableEntityHttpException((string) $errors . ' Missing data for Entity -> ' . $this->serializeJson($character));
         }
     }
 
-     /**
-     * {@inheritdoc}
-     */
+    /**
+    * {@inheritdoc}
+    */
     public function submit(Character $character, $formName, $data)
     {
         $dataArray = is_array($data) ? $data : json_decode($data, true);
@@ -87,7 +113,8 @@ class CharacterService implements CharacterServiceInterface
     /**
     * {@inheritdoc}
     */
-    public function delete(Character $character) {
+    public function delete(Character $character)
+    {
         $this->em->remove($character);
         $this->em->flush();
 
@@ -104,7 +131,7 @@ class CharacterService implements CharacterServiceInterface
         $character
             ->setModification(new DateTime())
         ;
-            
+
         $this->em->persist($character);
         $this->em->flush();
 
@@ -118,7 +145,7 @@ class CharacterService implements CharacterServiceInterface
     {
         $folder = __DIR__ . '/../../public/images/';
 
-        $finder = new Finder;
+        $finder = new Finder();
         $finder
             ->files()
             ->in($folder)
@@ -126,31 +153,7 @@ class CharacterService implements CharacterServiceInterface
             ->sortByName()
         ;
         $images = array();
-        foreach ($finder as $file){
-            $images[] = '/images/' . $file->getPathname();
-        }
-        shuffle($images);
-
-        return array_slice($images, 0, $number, true);
-    }
-
-        /**
-     * {@inheritdoc}
-     */
-    public function getImagesKind(string $kind, int $number)
-    {
-        $folder = __DIR__ . '/../../public/images/';
-
-        $finder = new Finder;
-        $finder
-            ->files()
-            ->name($kind . '-*.jpg')
-            ->in($folder)
-            ->notPath('/cartes/')
-            ->sortByName()
-        ;
-        $images = array();
-        foreach ($finder as $file){
+        foreach ($finder as $file) {
             $images[] = '/images/' . $file->getPathname();
         }
         shuffle($images);
@@ -160,14 +163,39 @@ class CharacterService implements CharacterServiceInterface
 
     /**
      * {@inheritdoc}
-     */ 
+     */
+    public function getImagesKind(string $kind, int $number)
+    {
+        $folder = __DIR__ . '/../../public/images/';
+
+        $finder = new Finder();
+        $finder
+            ->files()
+            ->name($kind . '-*.jpg')
+            ->in($folder)
+            ->notPath('/cartes/')
+            ->sortByName()
+        ;
+        $images = array();
+        foreach ($finder as $file) {
+            $images[] = '/images/' . $file->getPathname();
+        }
+        shuffle($images);
+
+        return array_slice($images, 0, $number, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAll()
     {
-        $characterFinals = array();
-        $characters = $this->characterRepository->findAll();
-        foreach ($characters as $character) {
-            $characterFinals[] = $character->toArray();
-        }
-        return $characterFinals;
+        return $this->characterRepository->findAll();
+        // $characterFinals = array();
+        // $characters = $this->characterRepository->findAll();
+        // foreach ($characters as $character) {
+        //     $characterFinals[] = $character->toArray();
+        // }
+        // return $characterFinals;
     }
 }
