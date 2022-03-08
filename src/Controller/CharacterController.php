@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Character;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\CharacterServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 
 class CharacterController extends AbstractController
 {
@@ -21,6 +23,21 @@ class CharacterController extends AbstractController
     }
 
     #[Route('/character/index', name: 'character_index', methods:['GET','HEAD'])]
+    /**
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\Schema(
+     *         type="array",
+     *         @OA\Items(ref=@Model(type=Character::class))
+     *     )
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @OA\Tag(name="Character")
+     */
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('characterIndex', null);
@@ -31,6 +48,30 @@ class CharacterController extends AbstractController
 
     #[Route('/character/display/{identifier}', name: 'character_display', requirements:["identifier" => "^([a-z0-9]{40})$"], methods:['GET','HEAD'])]
     #[Entity('character', expr:"repository.findOneByIdentifier(identifier)")]
+    /**
+     * Displays the Character
+     *
+     * @OA\Parameter(
+     *     name="identifier",
+     *     in="path",
+     *     description="identifier for the Character",
+     *     required=true,
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @Model(type=Character::class)
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="Not Found",
+     * )
+     * @OA\Tag(name="Character")
+     */
     public function display(Character $character): Response
     {
         // $character = New Character();
@@ -42,6 +83,28 @@ class CharacterController extends AbstractController
     }
 
     #[Route('/character/create', name: 'characterCreate', methods:['POST','HEAD'])]
+    /**
+     * 
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @Model(type=Character::class)
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @OA\RequestBody(
+     *     request="Character",
+     *     description="Data for the Character",
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(ref="#/components/schemas/Character")
+     *     )
+     * )
+     * @OA\Tag(name="Character")
+     */
     public function create(Request $request): Response
     {
         $character = $this->characterService->create($request->getContent());
@@ -49,12 +112,45 @@ class CharacterController extends AbstractController
     }
 
     #[Route('/character', name: 'character_redirect_index', methods:['GET','HEAD'])]
+    /**
+    * @OA\Response(
+    *     response=302,
+    *     description="Redirect",
+    * )
+    * @OA\Tag(name="Character")
+    */
     public function redirectIndex(): Response
     {
         return $this->redirectToRoute('character_index');
     }
 
     #[Route('/character/modify/{identifier}', name: 'characterModify', requirements:["identifier" => "^([a-z0-9]{40})$"], methods:['PUT','HEAD'])]
+    /**
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @Model(type=Character::class)
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )* @OA\Parameter(
+     *     name="identifier",
+     *     in="path",
+     *     description="identifier for the Character",
+     *     required=true
+     * )
+     * @OA\RequestBody(
+     *     request="Character",
+     *     description="Data for the Character",
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(ref="#/components/schemas/Character")
+     *     )
+     * )
+     *  @OA\Tag(name="Character")
+     */
     public function modify(Request $request, Character $character)
     {
         $this->denyAccessUnlessGranted('characterModify', $character);
@@ -64,6 +160,26 @@ class CharacterController extends AbstractController
     }
 
     #[Route('/character/delete/{identifier}', name: 'characterDelete', requirements:["identifier" => "^([a-z0-9]{40})$"], methods:['DELETE','HEAD'])]
+    /** 
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\Schema(
+     *         @OA\Property(property="delete", type="boolean"),
+     *     )
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @OA\Parameter(
+     *     name="identifier",
+     *     in="path",
+     *     description="identifier for the Character",
+     *     required=true
+     * )
+     * @OA\Tag(name="Character")
+     */
     public function delete(Character $character)
     {
         $this->denyAccessUnlessGranted('characterDelete', $character);
