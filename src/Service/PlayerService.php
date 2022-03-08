@@ -15,21 +15,29 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use App\Repository\PlayerRepository;
+use App\Event\PlayerEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PlayerService implements PlayerServiceInterface
 {
+
+    private $playerRepository;
+    private $formFactory;
+    private $em;
+    private $dispatcher;
+
     public function __construct(
         PlayerRepository $playerRepository,
         EntityManagerInterface $em,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $dispatcher,
     ) {
         $this->playerRepository = $playerRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
+        $this->dispatcher = $dispatcher;
     }
-    private $playerRepository;
-    private $formFactory;
-    private $em;
+
 
     /**
      * {@inheritdoc}
@@ -127,6 +135,10 @@ class PlayerService implements PlayerServiceInterface
     public function modify(Player $player, string $data)
     {
         $this->submit($player, PlayerType::class, $data);
+
+        $event = new PlayerEvent($player);
+        $this->dispatcher->dispatch($event, PlayerEvent::PLAYER_MODIFIED);
+
         $this->isEntityFilled($player);
         $player
             ->setModification(new DateTime())
