@@ -92,7 +92,6 @@ class CharacterApiHtmlController extends AbstractController
                 'http://localhost/.../LaGuildeDesSeigneurs-2021/public/character/modify/' . $identifier,
                 [
                     'json' => $request->request->all()['character_api_html'],
-                    'body' => json_encode($request->request->all()['character_api_html']),
                 ]
             );
 
