@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Character index{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Character index</h1>
+
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th>Kind</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Caste</th>
+                <th>Knowledge</th>
+                <th>Intelligence</th>
+                <th>Life</th>
+                <th>Creation</th>
+                <th>Modification</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for character in characters %}
+            <tr>
+                <td>
+                    {{ character.kind == 'Dame' ? '<strong>' : '' }}
+                    {{ character.kind }}
+                    {{ character.kind == 'Dame' ? '</strong>' : character.kind }}
+                </td>
+                <td><a href="{{ path('app_character_html_show', {'id': character.id}) }}">{{ character.name }}</a></td>
+                <td>{{ character.surname }}</td>
+                <td>{{ character.caste }}</td>
+                <td>{{ character.knowledge }}</td>
+                <td>{{ character.intelligence }}</td>
+                <td>{{ character.life }}</td>
+                <td>{{ character.creation ? character.creation|date('d-m-Y H:i:s') : '' }}</td>
+                <td>{{ character.modification ? character.modification|date('d-m-Y H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_character_html_edit', {'id': character.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center"><a href="{{ path('character_html_new') }}" class=" btn btn-primary">Nouveau Character</a></div>
+{% endblock %}

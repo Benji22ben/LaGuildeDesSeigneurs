@@ -49,13 +49,32 @@ class CharacterService implements CharacterServiceInterface
     public function create(string $data)
     {
         $character = new Character();
+        // $character
+        //     ->setIdentifier(hash('sha1', uniqid()))
+        //     ->setCreation(new DateTime())
+        //     ->setModification(new DateTime())
+        // ;
+        $this->submit($character, CharacterType::class, $data);
+
+        // $event = new CharacterEvent($character);
+        // $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
+
+        // $this->isEntityFilled($character);
+
+        // $this->em->persist($character);
+        // $this->em->flush();
+
+        // return $character;
+        return $this->createFromHtml($character);
+    }
+
+    public function createFromHtml(Character $character)
+    {
         $character
             ->setIdentifier(hash('sha1', uniqid()))
             ->setCreation(new DateTime())
             ->setModification(new DateTime())
         ;
-        $this->submit($character, CharacterType::class, $data);
-
         $event = new CharacterEvent($character);
         $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
 
@@ -138,6 +157,20 @@ class CharacterService implements CharacterServiceInterface
     public function modify(Character $character, string $data)
     {
         $this->submit($character, CharacterType::class, $data);
+        // $this->isEntityFilled($character);
+        // $character
+        //     ->setModification(new DateTime())
+        // ;
+
+        // $this->em->persist($character);
+        // $this->em->flush();
+
+        // return $character;
+        return $this->modifyFromHtml($character);
+    }
+
+    public function modifyFromHtml($character)
+    {
         $this->isEntityFilled($character);
         $character
             ->setModification(new DateTime())
@@ -148,7 +181,7 @@ class CharacterService implements CharacterServiceInterface
 
         return $character;
     }
-
+    
     /**
      * {@inheritdoc}
      */

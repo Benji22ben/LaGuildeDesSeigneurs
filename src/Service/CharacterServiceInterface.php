@@ -42,4 +42,8 @@ interface CharacterServiceInterface
     * Serialize the object(s)
     */
     public function serializeJson($data);
+
+    public function createFromHtml(Character $character);
+
+    public function modifyFromHtml(Character $character);
 }
