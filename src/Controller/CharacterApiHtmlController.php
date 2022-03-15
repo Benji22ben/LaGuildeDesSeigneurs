@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Form\CharacterApiHtmlType;
-use App\Repository\CharacterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +24,21 @@ class CharacterApiHtmlController extends AbstractController
     /**
      * @Route("/", name="character_api_html_index", methods={"GET"})
      */
-    public function index(CharacterRepository $characterRepository): Response
+    public function index(): Response
     {
         $response = $this->client->request('GET','http://localhost/LaGuildeDesSeigneurs/public/character/index');
+
+        return $this->render('character_api_html/index.html.twig', [
+            'characters' => $response->toArray(),
+        ]);
+    }
+
+    /**
+     * @Route("/{number}", name="character_api_html_intelligence", methods={"GET"})
+     */
+    public function intelligence(int $number): Response
+    {
+        $response = $this->client->request('GET','http://localhost/LaGuildeDesSeigneurs/public/character/intelligence/' . $number);
 
         return $this->render('character_api_html/index.html.twig', [
             'characters' => $response->toArray(),

@@ -47,6 +47,30 @@ class CharacterController extends AbstractController
     }
 
     #[Route('/character/intelligence/{intelligence}', name: 'character_intelligence', requirements:["intelligence" => "\d+"], methods:['GET','HEAD'])]
+    /**
+     * Displays only the characters who are greater than
+     *
+     * @OA\Parameter(
+     *     name="intelligence",
+     *     in="path",
+     *     description="Intelligence that we want to be lower than the characters shown (has to be an integer)",
+     *     required=true,
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @Model(type=Character::class)
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="Not Found",
+     * )
+     * @OA\Tag(name="Character")
+     */
     public function indexIntelligenceLevel(int $intelligence): Response
     {
         // $this->denyAccessUnlessGranted('characterIndex', null);

@@ -36,7 +36,7 @@ class CharacterRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->select('c')
             ->where('c.intelligence >= :intelligence')
-            ->setParameter('number', $intelligence)
+            ->setParameter('intelligence', $intelligence)
             ->getQuery()
             ->getResult()
             ;
