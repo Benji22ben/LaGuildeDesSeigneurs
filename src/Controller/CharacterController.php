@@ -46,7 +46,7 @@ class CharacterController extends AbstractController
         return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
     }
 
-    #[Route('/character/intelligence/{intelligence}', name: 'character_intelligence', requirements:["intelligence" => "\d+"], methods:['GET','HEAD'])]
+    #[Route('/character/intelligence/{level}', name: 'character_intelligence', requirements:["intelligence" => "\d+"], methods:['GET','HEAD'])]
     /**
      * Displays only the characters who are greater than
      *
@@ -71,11 +71,11 @@ class CharacterController extends AbstractController
      * )
      * @OA\Tag(name="Character")
      */
-    public function indexIntelligenceLevel(int $intelligence): Response
+    public function indexIntelligenceLevel(int $level): Response
     {
         // $this->denyAccessUnlessGranted('characterIndex', null);
 
-        $characters = $this->characterService->getIntelligenceIsGreaterThanOrEqual($intelligence);
+        $characters = $this->characterService->getIntelligenceIsGreaterThanOrEqual($level);
         
         return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
     }

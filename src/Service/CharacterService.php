@@ -243,8 +243,8 @@ class CharacterService implements CharacterServiceInterface
         // return $characterFinals;
     }
 
-    public function getIntelligenceIsGreaterThanOrEqual($number)
+    public function getIntelligenceIsGreaterThanOrEqual($level)
     {
-        return $this->characterRepository->findAllGreaterThan($number);
+        return $this->characterRepository->findAllGreaterThan($level);
     }
 }

@@ -31,12 +31,13 @@ class CharacterRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllGreaterThan($intelligence)
+    public function findAllGreaterThan($level)
     {
         return $this->createQueryBuilder('c')
             ->select('c')
-            ->where('c.intelligence >= :intelligence')
-            ->setParameter('intelligence', $intelligence)
+            ->leftJoin('c.player', 'p')
+            ->where('c.intelligence >= :level')
+            ->setParameter('level', $level)
             ->getQuery()
             ->getResult()
             ;

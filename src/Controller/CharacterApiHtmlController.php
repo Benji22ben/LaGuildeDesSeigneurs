@@ -34,11 +34,11 @@ class CharacterApiHtmlController extends AbstractController
     }
 
     /**
-     * @Route("/{number}", name="character_api_html_intelligence", methods={"GET"})
+     * @Route("/intelligence/{level}", name="character_api_html_intelligence_level", methods={"GET"})
      */
-    public function intelligence(int $number): Response
+    public function intelligenceLevel(int $level): Response
     {
-        $response = $this->client->request('GET','http://localhost/LaGuildeDesSeigneurs/public/character/intelligence/' . $number);
+        $response = $this->client->request('GET','http://localhost/LaGuildeDesSeigneurs/public/character/intelligence/' . $level);
 
         return $this->render('character_api_html/index.html.twig', [
             'characters' => $response->toArray(),

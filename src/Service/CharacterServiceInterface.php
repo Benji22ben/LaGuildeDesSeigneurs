@@ -47,5 +47,8 @@ interface CharacterServiceInterface
 
     public function modifyFromHtml(Character $character);
 
-    public function getIntelligenceIsGreaterThanOrEqual($number);
+    /*** 
+     * Gets all the characters by their intelligence level
+    */
+    public function getIntelligenceIsGreaterThanOrEqual(int $level);
 }
